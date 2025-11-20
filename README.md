@@ -1,41 +1,35 @@
-# picgo-plugin-qn-uploader
 
-千牛图床上传插件 for [PicGo](https://github.com/Molunerfinn/PicGo)
+<span style="background:#f38181">2025年11月20日</span>
 
-## 功能
+前几天在看到哔哩哔哩上有人说图床可以用淘宝店铺的，我查看有30G空间，感觉不错。
 
-- 支持上传图片到千牛图床
-- 自动获取图片直链
-- 支持指定文件夹上传（默认根目录）
+测试看速度非常快也是阿里云的对象存储，<font color="#f79646"><strong><em>加载速度在20ms内</em></strong></font>
+不过各位需要注意[淘宝图片空间产品服务协议](https://terms.alicdn.com/legal-agreement/terms/suit_bu1_taobao/suit_bu1_taobao201707252033_94262.html?spm=a21dvs.23580594.0.0.5e38645eHFGWyt)
 
-## 安装
+<img src="https://img.alicdn.com/imgextra/i2/3776889809/O1CN01m1yX1X2MKa7CSfEzj_!!3776889809.png" alt="202511202250490" loading="lazy" style="width:100%;max-width:var(--size);height:auto;display:block;--size:200px;">
 
-1. 在 PicGo 插件设置中搜索 `qn-uploader` 并安装
-2. 或者下载本插件包，在 PicGo 中选择「导入本地插件」并选择本插件包
+我有点不敢用，因为这个东西需要实名认证，真让人害怕🤓🤓
 
-## 配置说明
+当然我也让Ai写了一个Picgo的上传插件，方便上传使用图片直连。
 
-### 获取千牛 Cookie
+<span style="background:#f38181">所需材料：</span>
+
+- 一个淘宝账号
+- 一个聪明的大脑
+- 一个正确的网络环境
+
+> 插件只需要Cookie&相册ID
+
+
+Cookie：
 
 1. 打开 [千牛卖家中心](https://myseller.taobao.com/)
 2. 登录账号后按 F12 打开开发者工具
 3. 刷新页面，在 Network(网络) 标签中找到任意请求
 4. 复制该请求的 Cookie 值（确保是完整的 Cookie）
 
-### 插件配置
 
-- **千牛Cookie**: 从千牛卖家中心获取的完整 Cookie
-- **文件夹ID**: 千牛图片空间中的文件夹ID（默认为根目录0，可指定其他文件夹ID）
+<img src="https://img.alicdn.com/imgextra/i3/3776889809/O1CN01DBe93G2MKa7CCAhqH_!!3776889809.png" alt="202511202200597" loading="lazy" style="width:100%;max-width:var(--size);height:auto;display:block;--size:200px;">
 
-## 使用方法
-
-1. 在 PicGo 图床设置中选择「千牛图床」
-2. 填入获取到的千牛 Cookie
-3. （可选）填入目标文件夹ID（留空则上传到根目录）
-4. 保存设置后即可使用
-
-## 注意事项
-
-1. Cookie 有时效性，如提示上传失败请重新获取 Cookie
-2. 仅支持 JPG/PNG/GIF 格式图片
-3. 单张图片大小不能超过 5MB
+相册ID：
+<img src="https://img.alicdn.com/imgextra/i3/3776889809/O1CN01Tujalr2MKa772rM93_!!3776889809.png" alt="202511202157228" loading="lazy" style="width:100%;max-width:var(--size);height:auto;display:block;--size:200px;">
