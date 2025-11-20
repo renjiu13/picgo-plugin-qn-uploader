@@ -1,0 +1,22 @@
+{
+  "name": "picgo-plugin-qn-uploader",
+  "version": "1.0.0",
+  "description": "千牛图床上传插件",
+  "main": "src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "picgo",
+    "picgo-gui-plugin",
+    "picgo-plugin",
+    "qianniu",
+    "uploader"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
