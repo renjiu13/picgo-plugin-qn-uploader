@@ -1,12 +1,16 @@
 {
   "name": "picgo-plugin-qn-uploader",
-  "version": "1.0.0",
-  "description": "千牛图床上传插件",
+  "version": "1.0.1",
+  "description": "千牛图床上传插件 - 兼容 PicList",
   "main": "src/index.js",
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "",
+  "homepage": "https://github.com/username/picgo-plugin-qn-uploader",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/picgo-plugin-qn-uploader.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,9 +18,14 @@
     "picgo",
     "picgo-gui-plugin",
     "picgo-plugin",
+    "piclist",
+    "piclist-compatible",
     "qianniu",
     "uploader"
   ],
   "author": "Your Name",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }

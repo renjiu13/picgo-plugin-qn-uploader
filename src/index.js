@@ -17,7 +17,8 @@ module.exports = (ctx) => {
     if (!cookie) {
       ctx.emit('notification', {
         title: '上传失败',
-        body: '请先配置千牛Cookie'
+        body: '请先配置千牛Cookie',
+        text: '请先配置千牛Cookie' // 兼容 PicList
       })
       return
     }
@@ -36,6 +37,9 @@ module.exports = (ctx) => {
           image = Buffer.from(imgList[i].base64Image, 'base64')
         }
 
+        // 兼容 PicList 和 PicGo 的文件名处理
+        const fileName = imgList[i].fileName || imgList[i].filename || 'image.png'
+
         const postConfig = {
           method: 'POST',
           url: url,
@@ -51,13 +55,15 @@ module.exports = (ctx) => {
             file: {
               value: image,
               options: {
-                filename: imgList[i].fileName
+                filename: fileName
               }
             }
           }
         }
 
         let body = await ctx.Request.request(postConfig)
+        
+        // 清理缓冲区数据
         delete imgList[i].base64Image
         delete imgList[i].buffer
 
@@ -65,26 +71,46 @@ module.exports = (ctx) => {
         try {
           const response = JSON.parse(body)
           if (response.success === true && response.object && response.object.url) {
+            // 同时设置 imgUrl 和 url 以兼容不同平台
             imgList[i]['imgUrl'] = response.object.url
+            imgList[i]['url'] = response.object.url
+            
+            // 设置其他可能需要的字段
+            imgList[i]['origin'] = response.object.url
           } else {
+            const errorMsg = '接口返回失败: ' + (response.message || '未知错误')
             ctx.emit('notification', {
               title: '上传失败',
-              body: '接口返回失败: ' + (response.message || '未知错误')
+              body: errorMsg,
+              text: errorMsg // 兼容 PicList
             })
+            // 设置错误标记
+            imgList[i].imgUrl = ''
+            imgList[i].url = ''
           }
         } catch (parseErr) {
+          const errorMsg = '响应解析失败: ' + parseErr.message
           ctx.emit('notification', {
             title: '上传失败',
-            body: '响应解析失败: ' + parseErr.message
+            body: errorMsg,
+            text: errorMsg // 兼容 PicList
           })
+          // 设置错误标记
+          imgList[i].imgUrl = ''
+          imgList[i].url = ''
         }
       }
     } catch (err) {
+      const errorMsg = '上传异常: ' + JSON.stringify(err)
       ctx.emit('notification', {
         title: '上传失败',
-        body: JSON.stringify(err)
+        body: errorMsg,
+        text: errorMsg // 兼容 PicList
       })
     }
+    
+    // 返回处理后的结果以兼容 PicList
+    return ctx
   }
 
   const config = ctx => {

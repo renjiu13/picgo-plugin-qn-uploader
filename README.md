@@ -1,4 +1,3 @@
-
 <span style="background:#f38181">2025年11月20日</span>
 
 前几天在看到哔哩哔哩上有人说图床可以用淘宝店铺的，我查看有30G空间，感觉不错。
@@ -11,6 +10,9 @@
 我有点不敢用，因为这个东西需要实名认证，真让人害怕🤓🤓
 
 当然我也让Ai写了一个Picgo的上传插件，方便上传使用图片直连。
+
+> 🔄 **版本更新**
+> 插件现已兼容 PicList，可以在 PicGo 和 PicList 中使用
 
 <span style="background:#f38181">所需材料：</span>
 
@@ -33,3 +35,9 @@ Cookie：
 
 相册ID：
 <img src="https://img.alicdn.com/imgextra/i3/3776889809/O1CN01Tujalr2MKa772rM93_!!3776889809.png" alt="202511202157228" loading="lazy" style="width:100%;max-width:var(--size);height:auto;display:block;--size:200px;">
+
+> 📝 **使用说明**
+> 
+> 1. 安装插件后，在 PicGo 或 PicList 的插件设置中配置 Cookie 和文件夹 ID
+> 2. 选择千牛图床作为默认上传方式
+> 3. 开始享受快速的图片上传体验！
