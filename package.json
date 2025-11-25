@@ -6,10 +6,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/username/picgo-plugin-qn-uploader",
+  "homepage": "https://github.com/Renjiu13/picgo-plugin-qn-uploader",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/picgo-plugin-qn-uploader.git"
+    "url": "https://github.com/Renjiu13/picgo-plugin-qn-uploader.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,7 @@
     "qianniu",
     "uploader"
   ],
-  "author": "Your Name",
+  "author": "阿旺 <Email@accdu.cloudns.org>",
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"

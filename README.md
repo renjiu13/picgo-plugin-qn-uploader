@@ -41,3 +41,12 @@ Cookie：
 > 1. 安装插件后，在 PicGo 或 PicList 的插件设置中配置 Cookie 和文件夹 ID
 > 2. 选择千牛图床作为默认上传方式
 > 3. 开始享受快速的图片上传体验！
+
+---
+
+### 🧑‍💻 开发者信息
+
+- **作者**：阿旺
+- **邮箱**：[Email@accdu.cloudns.org](mailto:Email@accdu.cloudns.org)
+- **主页**：[https://1.122915.xyz/](https://1.122915.xyz/)
+- **GitHub**：[https://github.com/Renjiu13/picgo-plugin-qn-uploader](https://github.com/Renjiu13/picgo-plugin-qn-uploader)
