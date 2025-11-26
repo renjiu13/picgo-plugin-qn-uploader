@@ -39,6 +39,11 @@ module.exports = (ctx) => {
 
         // 兼容 PicList 和 PicGo 的文件名处理
         const fileName = imgList[i].fileName || imgList[i].filename || 'image.png'
+        // 确保文件名有适当的扩展名
+        let finalFileName = fileName
+        if (!fileName.includes('.')) {
+          finalFileName = fileName + '.png'
+        }
 
         const postConfig = {
           method: 'POST',
@@ -55,7 +60,7 @@ module.exports = (ctx) => {
             file: {
               value: image,
               options: {
-                filename: fileName
+                filename: finalFileName
               }
             }
           }
@@ -77,8 +82,25 @@ module.exports = (ctx) => {
             
             // 设置其他可能需要的字段
             imgList[i]['origin'] = response.object.url
+            
+            // PicList 兼容字段
+            imgList[i]['type'] = 'QN'
           } else {
-            const errorMsg = '接口返回失败: ' + (response.message || '未知错误')
+            // 更详细的错误信息
+            let errorMsg = '接口返回失败'
+            if (response.message) {
+              errorMsg += ': ' + response.message
+            } else if (response.error) {
+              errorMsg += ': ' + response.error
+            } else {
+              errorMsg += ': 未知错误'
+            }
+            
+            // 如果响应体不为空但不是有效的JSON，可能是网络或其他问题
+            if (!response.success && !response.message && !response.error && body) {
+              errorMsg += ' (服务器响应: ' + body.substring(0, 100) + ')'
+            }
+            
             ctx.emit('notification', {
               title: '上传失败',
               body: errorMsg,
@@ -89,7 +111,24 @@ module.exports = (ctx) => {
             imgList[i].url = ''
           }
         } catch (parseErr) {
-          const errorMsg = '响应解析失败: ' + parseErr.message
+          // 如果解析JSON失败，可能是返回了HTML或其他格式的内容
+          let errorMsg = '响应解析失败'
+          if (body && typeof body === 'string') {
+            // 尝试提取关键错误信息
+            if (body.includes('登录') || body.includes('login')) {
+              errorMsg += ': Cookie可能已过期，请重新配置'
+            } else if (body.includes('403') || body.includes('Forbidden')) {
+              errorMsg += ': 权限不足，请检查Cookie权限'
+            } else if (body.length > 100) {
+              // 如果响应很长，只显示前100个字符
+              errorMsg += ': ' + body.substring(0, 100) + '...'
+            } else {
+              errorMsg += ': ' + body
+            }
+          } else {
+            errorMsg += ': ' + parseErr.message
+          }
+          
           ctx.emit('notification', {
             title: '上传失败',
             body: errorMsg,
@@ -101,7 +140,20 @@ module.exports = (ctx) => {
         }
       }
     } catch (err) {
-      const errorMsg = '上传异常: ' + JSON.stringify(err)
+      let errorMsg = '上传异常'
+      if (err.message) {
+        errorMsg += ': ' + err.message
+      } else {
+        errorMsg += ': ' + JSON.stringify(err)
+      }
+      
+      // 特殊错误处理
+      if (err.message && (err.message.includes('timeout') || err.message.includes('ETIMEDOUT'))) {
+        errorMsg += ' (请求超时，请检查网络连接)'
+      } else if (err.message && (err.message.includes('ENOTFOUND') || err.message.includes('ECONNREFUSED'))) {
+        errorMsg += ' (网络连接失败，请检查网络设置)'
+      }
+      
       ctx.emit('notification', {
         title: '上传失败',
         body: errorMsg,
