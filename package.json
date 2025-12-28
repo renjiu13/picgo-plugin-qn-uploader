@@ -1,6 +1,6 @@
 {
   "name": "picgo-plugin-qn-uploader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "千牛图床上传插件 - 兼容 PicList",
   "main": "src/index.js",
   "publishConfig": {
@@ -27,5 +27,8 @@
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }
