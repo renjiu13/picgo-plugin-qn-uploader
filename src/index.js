@@ -52,6 +52,7 @@ module.exports = (ctx) => {
       // WebP 转换逻辑
       if (convertToWebp) {
         try {
+          const sharp = require('sharp')
           image = await sharp(image).webp().toBuffer()
           // 修改扩展名为 .webp
           const lastDotIndex = fileName.lastIndexOf('.')
@@ -61,7 +62,7 @@ module.exports = (ctx) => {
             fileName += '.webp'
           }
         } catch (e) {
-          ctx.log.warn('WebP conversion failed: ' + e.message)
+          ctx.log.warn('WebP conversion failed (possibly due to missing sharp dependency): ' + e.message)
           // 转换失败则继续使用原图上传
         }
       }
