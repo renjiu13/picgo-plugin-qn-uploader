@@ -27,8 +27,5 @@
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"
-  },
-  "dependencies": {
-    "sharp": "^0.34.5"
   }
 }

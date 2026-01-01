@@ -1,5 +1,3 @@
-const sharp = require('sharp')
-
 module.exports = (ctx) => {
   const register = () => {
     ctx.helper.uploader.register('qn-uploader', {
@@ -12,10 +10,10 @@ module.exports = (ctx) => {
   const handle = async function (ctx) {
     const userConfig = ctx.getConfig('picBed.qn-uploader')
     if (!userConfig) {
-      throw new Error('Can\'t find uploader config')
+      throw new Error('找不到上传配置，请先进行配置')
     }
 
-    const { cookie, folderId = '0', convertToWebp = false } = userConfig
+    const { cookie, folderId = '0' } = userConfig
     if (!cookie) {
       const msg = '请先配置千牛Cookie'
       ctx.emit('notification', {
@@ -38,35 +36,19 @@ module.exports = (ctx) => {
 
     const imgList = ctx.output
     for (const img of imgList) {
-      // 确保文件名有扩展名
+      // 1. 确定文件名
       let fileName = img.fileName || img.filename || 'image.png'
       if (!fileName.includes('.')) {
         fileName += '.png'
       }
 
+      // 2. 获取图片 Buffer
       let image = img.buffer
       if (!image && img.base64Image) {
         image = Buffer.from(img.base64Image, 'base64')
       }
 
-      // WebP 转换逻辑
-      if (convertToWebp) {
-        try {
-          const sharp = require('sharp')
-          image = await sharp(image).webp().toBuffer()
-          // 修改扩展名为 .webp
-          const lastDotIndex = fileName.lastIndexOf('.')
-          if (lastDotIndex !== -1) {
-            fileName = fileName.substring(0, lastDotIndex) + '.webp'
-          } else {
-            fileName += '.webp'
-          }
-        } catch (e) {
-          ctx.log.warn('WebP conversion failed (possibly due to missing sharp dependency): ' + e.message)
-          // 转换失败则继续使用原图上传
-        }
-      }
-
+      // 3. 构造上传请求
       const postConfig = {
         method: 'POST',
         url,
@@ -88,7 +70,6 @@ module.exports = (ctx) => {
         try {
           response = JSON.parse(body)
         } catch (e) {
-          // 非JSON响应处理
           throw new Error('响应解析失败: ' + (body && body.length > 100 ? body.substring(0, 100) + '...' : body))
         }
 
@@ -96,12 +77,11 @@ module.exports = (ctx) => {
           img.imgUrl = response.object.url
           img.url = response.object.url
           img.origin = response.object.url
-          img.type = 'QN' // PicList 兼容
+          img.type = 'QN' 
           
           delete img.base64Image
           delete img.buffer
         } else {
-          // 提取错误信息
           let msg = response.message || response.error || '未知错误'
           if (!msg && body) msg = '服务器响应异常'
           throw new Error(msg)
@@ -109,15 +89,11 @@ module.exports = (ctx) => {
       } catch (err) {
         let errorMsg = err.message || JSON.stringify(err)
         
-        // 错误信息优化
+        // 错误信息友好化
         if (errorMsg.includes('login') || errorMsg.includes('登录')) {
-          errorMsg = 'Cookie可能已过期，请重新配置'
-        } else if (errorMsg.includes('403') || errorMsg.includes('Forbidden')) {
-          errorMsg = '权限不足，请检查Cookie权限'
-        } else if (errorMsg.includes('timeout') || errorMsg.includes('ETIMEDOUT')) {
-          errorMsg = '请求超时，请检查网络连接'
-        } else if (errorMsg.includes('ENOTFOUND') || errorMsg.includes('ECONNREFUSED')) {
-          errorMsg = '网络连接失败，请检查网络设置'
+          errorMsg = 'Cookie可能已过期，请重新获取'
+        } else if (errorMsg.includes('403')) {
+          errorMsg = '权限不足，请检查Cookie'
         }
 
         ctx.emit('notification', {
@@ -141,7 +117,7 @@ module.exports = (ctx) => {
         type: 'input',
         default: userConfig.cookie || '',
         required: true,
-        message: '千牛Cookie（请从千牛卖家中心获取完整Cookie）',
+        message: '千牛Cookie',
         alias: '千牛Cookie'
       },
       {
@@ -149,16 +125,8 @@ module.exports = (ctx) => {
         type: 'input',
         default: userConfig.folderId || '0',
         required: false,
-        message: '文件夹ID（默认为根目录0，可指定其他文件夹ID）',
+        message: '文件夹ID（默认0）',
         alias: '文件夹ID'
-      },
-      {
-        name: 'convertToWebp',
-        type: 'confirm',
-        default: userConfig.convertToWebp || false,
-        required: false,
-        message: '是否将上传图片转换为WebP格式',
-        alias: '开启WebP转换'
       }
     ]
   }
